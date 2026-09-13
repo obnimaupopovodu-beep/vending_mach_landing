@@ -1,0 +1,13 @@
+:root {
+  --color-bg: #fbf4f1;
+  --color-surface-2: #f7e1dc;
+  --color-badge-soft: #f3cec5;
+  --color-accent-primary: #9c3f5c;
+  --color-accent-contrast: #1e2430;
+  --color-led-spark: #2e6fe0;
+  --color-text: #1e2126;
+  --color-border: #ecd9d3;
+  --radius-card: 28px;
+  --radius-control: 14px;
+  --shadow-soft: 0 20px 55px rgba(102, 62, 71, 0.12);
+}
