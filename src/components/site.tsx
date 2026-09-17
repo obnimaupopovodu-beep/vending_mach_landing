@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { AirplaneTilt, Buildings, CaretDown, ChatCircleText, Check, EnvelopeSimple, MapPin, Phone, ShoppingBag, Student, WhatsappLogo } from "@phosphor-icons/react";
+import { AirplaneTilt, Buildings, CaretDown, ChatCircleText, Check, CreditCard, DeviceMobile, EnvelopeSimple, MapPin, Phone, QrCode, ShoppingBag, Student, WhatsappLogo } from "@phosphor-icons/react";
 import { site } from "@/config/site";
 import { useLanguage } from "./language-provider";
 import { Reveal } from "./reveal";
@@ -27,7 +27,48 @@ export function Facts() { const { copy } = useLanguage(); return <section classN
 
 export function About() { const { copy } = useLanguage(); return <section id="about" className="section about"><Reveal><h2>{copy.about.title}</h2><p className="body-copy">{copy.about.text}</p></Reveal><div className="place-grid">{copy.about.places.map((place, i) => { const Icon = icons[i]; return <Reveal key={place}><article className="place-card"><Icon size={27} weight="regular" /><span>{place}</span></article></Reveal>; })}</div><p className="phrase">{copy.about.phrase}</p></section>; }
 
-export function Products() { const { copy } = useLanguage(); return <section className="section products"><Reveal><h2>{copy.products.title}</h2></Reveal><div className="product-grid">{copy.products.items.map((item, i) => <Reveal key={item}><article className="product-card"><span className={`product-shape ${productShapes[i]}`} /><ShoppingBag size={25} /><h3>{item}</h3></article></Reveal>)}</div><Reveal><div className="product-notes"><p>{copy.products.text}</p><p>{copy.products.payment}</p><b>EVA · Always · Kotex</b><small>{copy.products.disclaimer}</small></div></Reveal></section>; }
+const paymentIcons = [CreditCard, QrCode, DeviceMobile];
+
+export function Products() {
+  const { copy } = useLanguage();
+  return (
+    <section className="section products">
+      <Reveal><h2>{copy.products.title}</h2></Reveal>
+      <Reveal>
+        <div className="product-notes">
+          <p>{copy.products.text}</p>
+          <div className="payment-block">
+            <p className="payment-lead">{copy.products.paymentLead}</p>
+            <ul className="payment-methods" aria-label={copy.products.paymentLead}>
+              {copy.products.paymentMethods.map((label, i) => {
+                const Icon = paymentIcons[i];
+                return (
+                  <li key={label}>
+                    <Icon size={22} weight="regular" aria-hidden />
+                    <span>{label}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <b>EVA · Always · Kotex</b>
+          <small>{copy.products.disclaimer}</small>
+        </div>
+      </Reveal>
+      <div className="product-grid">
+        {copy.products.items.map((item, i) => (
+          <Reveal key={item}>
+            <article className="product-card">
+              <span className={`product-shape ${productShapes[i]}`} />
+              <ShoppingBag size={25} />
+              <h3>{item}</h3>
+            </article>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export function Values() { const { copy } = useLanguage(); return <section className="values"><Reveal><div className="values-copy"><h2>{copy.values.title}</h2><p>{copy.values.text}</p><div className="value-cards">{copy.values.cards.map((card) => <span key={card}><Check size={20} />{card}</span>)}</div></div></Reveal><Reveal><aside className="quote-panel"><div className="quote-pattern" /><blockquote>«{copy.values.quote}»</blockquote><cite>{copy.values.author}</cite></aside></Reveal></section>; }
 
@@ -45,7 +86,7 @@ export function Footer() { const { copy } = useLanguage(); return <footer><div c
 
 export function FloatingContact() { const { copy } = useLanguage(); const [open, setOpen] = useState(false); const ref = useRef<HTMLDivElement>(null); useEffect(() => { const close = (event: MouseEvent) => { if (!ref.current?.contains(event.target as Node)) setOpen(false); }; const esc = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); }; document.addEventListener("mousedown", close); document.addEventListener("keydown", esc); return () => { document.removeEventListener("mousedown", close); document.removeEventListener("keydown", esc); }; }, []); return <div ref={ref} className="floating-contact"><div className={open ? "contact-popover visible" : "contact-popover"}><a href={site.whatsapp} target="_blank" rel="noreferrer">WhatsApp</a><a href={site.phoneHref}>{copy.footer.call}</a><a href={`mailto:${site.email}`}>Email</a></div><button className="button primary" aria-label={copy.footer.write} aria-expanded={open} onClick={() => setOpen(!open)}><ChatCircleText size={21} />{copy.footer.write}<CaretDown size={15} /></button></div>; }
 
-export function HomePage() { return <><Header /><main><Hero /><Facts /><About /><Products /><Values /><Locations /><Benefits /><PartnerSection /><ContactSection /></main><Footer /><FloatingContact /></>; }
+export function HomePage() { return <><Header /><main><Hero /><Values /><Products /><About /><Facts /><Locations /><Benefits /><PartnerSection /><ContactSection /></main><Footer /><FloatingContact /></>; }
 
 export function PartnerPage() { const { copy } = useLanguage(); const venues = copy.locations.items; const value = copy.benefits.venueItems; return <><Header /><main><section className="partner-hero"><Reveal><p className="kicker">EVA / B2B</p><h1>{copy.partnerPage.title}</h1><p>{copy.partnerPage.intro}</p><a className="button primary" href="#partner-form">{copy.nav.partnerCta}</a></Reveal></section><section className="section partner-info"><Reveal><h2>{copy.partnerPage.suitable}</h2><div className="pill-list">{venues.map((item) => <span key={item}>{item}</span>)}</div></Reveal><Reveal><h2>{copy.partnerPage.value}</h2><div className="value-cards">{value.map((item) => <span key={item}><Check size={20} />{item}</span>)}</div></Reveal><Reveal><h2>{copy.partnerPage.how}</h2><ol className="steps">{copy.partnerPage.steps.map((item, i) => <li key={item}><b>0{i + 1}</b>{item}</li>)}</ol><p>{copy.partnerPage.details}</p></Reveal></section><section id="partner-form" className="section form-section"><div><h2>{copy.partner.title}</h2><p>{copy.partner.intro}</p></div><PartnerForm /></section></main><Footer /><FloatingContact /></>; }
 
